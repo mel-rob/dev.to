@@ -173,6 +173,9 @@ class Article < ApplicationRecord
       customRanking ["desc(search_score)", "desc(hotness_score)"]
     end
 
+    # adds index of articles based on tags, ranks by hotness score
+    # can use a similar method to pull relevant article - potentially limit the top one?
+    # will also need to add check for what user has received previously and that it has been from past 14 days
     add_index "ordered_articles", id: :index_id, per_environment: true, enqueue: :trigger_index do
       attributes :title, :path, :class_name, :comments_count, :reading_time, :language,
                  :tag_list, :positive_reactions_count, :id, :hotness_score, :score, :readable_publish_date, :flare_tag, :user_id,
@@ -411,6 +414,8 @@ class Article < ApplicationRecord
     Search::RemoveFromIndexWorker.new.perform("ordered_articles_#{Rails.env}", index_id)
   end
 
+  # compiling score for article based on 'hotness', comments, reactions, etc.
+  # will need to use similar to decide which article to send in email
   def search_score
     calculated_score = hotness_score.to_i + ((comments_count * 3).to_i + positive_reactions_count.to_i * 300 * user.reputation_modifier * score.to_i)
     calculated_score.to_i
