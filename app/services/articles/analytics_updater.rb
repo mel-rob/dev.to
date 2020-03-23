@@ -1,3 +1,5 @@
+# gets articles that qualify for user
+# add in check for whether user has already received/read?
 module Articles
   class AnalyticsUpdater
     def initialize(user, context = "default")
@@ -35,6 +37,8 @@ module Articles
       end
     end
 
+    # populating qualified articles to send to user
+    # will need something like this to figure out which ones are qualified based on already sent / time period
     def get_articles_that_qualify(articles_to_check)
       qualified_articles = []
       articles_to_check.each do |article|
