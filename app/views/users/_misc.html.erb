@@ -1,3 +1,6 @@
+<!-- this partial handles the misc sub-menu under profile -->
+<!-- we will need to add Daily Dev subscription option here -->
+
 <h3>👋 Style customizations have moved to <a href="/settings/ux">UX</a>
 
 <h2> Connect </h2>
@@ -21,8 +24,11 @@
   </div>
 <% end %>
 
+<%# this renders language settings partial which we can replicate for email subscription %>
 <%= render "language_settings" %>
 
+<!-- we can use similar checkbox fields here for daily dev subscription -->
+<!-- will want to pre-populate email text field with user's email -->
 <h2>Sponsors</h2>
 <h4 style="font-weight:400">
   You have the option to remove sponsor messaging (where it is practical to do so). Our wonderful sponsors help sustain the platform and improve your experience, and we strive to make their presence constructive to the community, but feel free to use this setting if you wish.
