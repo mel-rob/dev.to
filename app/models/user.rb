@@ -64,6 +64,8 @@ class User < ApplicationRecord
 
   devise :omniauthable, :registerable, :database_authenticatable, :confirmable, :rememberable
 
+  # validates user email
+  # will want to pull in this email as a default for Daily Dev subscription
   validates :email,
             length: { maximum: 50 },
             email: true,
@@ -171,6 +173,8 @@ class User < ApplicationRecord
     includes(:counters).order(Arel.sql("user_counters.data -> 'comments_these_7_days' DESC")).limit(number)
   }
 
+  # these update changes in the database related to email subscriptions, language settings, usernames, etc.
+  # will likely need to add a method here to update database of change to Daily Dev email subscription
   after_create_commit :send_welcome_notification
   after_save :bust_cache
   after_save :subscribe_to_mailchimp_newsletter
@@ -299,6 +303,8 @@ class User < ApplicationRecord
     true
   end
 
+  # this method is caching the tags a user is following and refreshing every 24 hrs
+  # will want to use followed tags to pull a daily email
   def cached_followed_tag_names
     cache_name = "user-#{id}-#{following_tags_count}-#{last_followed_at&.rfc3339}/followed_tag_names"
     Rails.cache.fetch(cache_name, expires_in: 24.hours) do
@@ -408,6 +414,8 @@ class User < ApplicationRecord
     errors.add(:username, "has been banished.") if BanishedUser.exists?(username: username)
   end
 
+  # this subscribes a user to the mailchimp newsletter
+  # will need to create something similar for a user to subscribe to the Daily Dev newsletter
   def subscribe_to_mailchimp_newsletter
     return unless email.present? && email.include?("@")
     return if saved_changes["unconfirmed_email"] && saved_changes["confirmation_sent_at"]
@@ -453,6 +461,8 @@ class User < ApplicationRecord
     Search::RemoveFromIndexWorker.perform_async("searchables_#{Rails.env}", index_id)
   end
 
+  # this unsubscribes a user from newsletters
+  # will also need something like this for when user un-checks the Daily Dev box
   def unsubscribe_from_newsletters
     MailchimpBot.new(self).unsubscribe_all_newsletters
   end
