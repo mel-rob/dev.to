@@ -124,6 +124,8 @@ class UsersController < ApplicationController
     render_update_response
   end
 
+  # this passes params of the checkboxes ticked by user
+  # might need to add Daily Dev email newsletter in here?
   def onboarding_checkbox_update
     if params[:user]
       permitted_params = %i[
