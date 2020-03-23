@@ -1,3 +1,7 @@
+# email subscriptions handled here
+# will need to add email subscription for Daily Dev
+# make sure we integrate into unsubscribe
+
 class EmailSubscriptionsController < ApplicationController
   PREFERRED_EMAIL_NAME = {
     email_digest_periodic: "DEV digest emails",
