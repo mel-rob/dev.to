@@ -941,4 +941,11 @@ RSpec.describe User, type: :model do
       expect(user.receives_follower_email_notifications?).to be(true)
     end
   end
+
+  describe "#email_daily_dev column exists" do
+    it "returns false by defult for daily dev emails" do
+      user.assign_attributes(email_daily_dev: false)
+      expect(user.email_daily_dev).to be(false)
+    end
+  end
 end
