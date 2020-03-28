@@ -13,7 +13,7 @@
   <h4><%= @article.cached_user_name %>
   <p><%= @article.published_at %>
   <article>
-    <%= @article.processed_html %>
+    <%= @article.processed_html.html_safe %>
   </article>
 </section>
 
