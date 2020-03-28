@@ -23,9 +23,12 @@ class EmailLogic
     @articles = most_viewed_article
     loop do
       article = @articles.sample
-      break if Ahoy::Message.where(user_id: @user.id, article_id: article.id)
+      return article if check_article(article)
     end
-    article
+  end
+
+  def check_article(article)
+    Ahoy::Message.where(user_id: @user.id, article_id: article.id).empty?
   end
 
   def should_receive_email?
