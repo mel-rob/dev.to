@@ -227,7 +227,7 @@ class User < ApplicationRecord
 =======
   def self.daily_dev
     users = opted_in_daily_dev
-    articles = Article.all
+    articles = Article.most_popular
     users.each do |user|
       article = articles.sample
       Notifications::DailyDevWorker.perform_async(user.email, user.id, article)
