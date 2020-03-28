@@ -20,7 +20,15 @@ class EmailLogic
   end
 
   def analyze_daily_dev
-    @articles = most_viewed_article.first
+    @articles = most_viewed_article
+    loop do
+      article = @articles.sample
+      return article if check_article(article)
+    end
+  end
+
+  def check_article(article)
+    Ahoy::Message.where(user_id: @user.id, article_id: article.id).empty?
   end
 
   def should_receive_email?
@@ -62,9 +70,7 @@ class EmailLogic
   end
 
   def most_viewed_article
-    Article.order("page_views_count DESC").
-      where.not(user_id: @user.id).
-      limit(1)
+    Article.most_popular
   end
 
   def get_days_until_next_email

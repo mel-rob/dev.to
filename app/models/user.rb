@@ -223,6 +223,19 @@ class User < ApplicationRecord
     language_settings["estimated_default_language"]
   end
 
+  def self.daily_dev
+    users = opted_in_daily_dev
+    articles = Article.most_popular
+    users.each do |user|
+      article = articles.sample
+      Notifications::DailyDevWorker.perform_async(user.email, user.id, article)
+    end
+  end
+
+  def self.opted_in_daily_dev
+    where(email_daily_dev: true)
+  end
+
   def self.trigger_delayed_index(record, remove)
     return if remove
 
