@@ -20,7 +20,12 @@ class EmailLogic
   end
 
   def analyze_daily_dev
-    @articles = most_viewed_article.first
+    @articles = most_viewed_article
+    loop do
+      article = @articles.sample
+      break if Ahoy::Message.where(user_id: @user.id, article_id: article.id)
+    end
+    article
   end
 
   def should_receive_email?
