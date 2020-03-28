@@ -247,7 +247,13 @@ class Article < ApplicationRecord
     stories.pluck(:path, :title, :comments_count, :created_at)
   end
 
-  def self.most_popular; end
+  def self.most_popular
+    Article.where("published_at > ?", 2.weeks.ago).
+      where("comments_count >= ?", 2).
+      where(email_digest_eligible: true).
+      order(page_views_count: :desc).
+      limit(20)
+  end
 
   def self.seo_boostable(tag = nil, time_ago = 18.days.ago)
     time_ago = 5.days.ago if time_ago == "latest" # Time ago sometimes returns this phrase instead of a date
